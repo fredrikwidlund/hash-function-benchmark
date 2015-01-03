@@ -5,7 +5,7 @@
 #include <err.h>
 #include <sys/time.h>
 
-#include "Murmurhash3.h"
+#include "MurmurHash3.h"
 
 uint64_t ntime()
 {
@@ -17,9 +17,9 @@ uint64_t ntime()
 
 int main(int argc, char **argv)
 {
-  int begin = strtol(argv[1], NULL, 0);
-  int end = strtol(argv[2], NULL, 0);
-  int inc = strtol(argv[3], NULL, 0);
+  unsigned int begin = strtol(argv[1], NULL, 0);
+  unsigned int end = strtol(argv[2], NULL, 0);
+  unsigned int inc = strtol(argv[3], NULL, 0);
   uint64_t i, t1, t2, h = 0, n = 10000000;
   float t;
   size_t len;

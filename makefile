@@ -23,7 +23,7 @@ farmhash: farmhash.cc support/farmhash.cc
 cityhash: cityhash.cc support/city.cc
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
-murmurhash3: murmurhash3.cc support/Murmurhash3.cpp
+murmurhash3: murmurhash3.cc support/MurmurHash3.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
 spookyv2: spookyv2.cc support/SpookyV2.cpp
