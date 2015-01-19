@@ -4,6 +4,7 @@ library(ggplot2)
 library(scales)
 library(sitools)
 
+data.standard <- read.csv("standard.dat", head=TRUE, sep=",")
 data.cfarmhash <- read.csv("cfarmhash.dat", head=TRUE, sep=",")
 data.farmhash <- read.csv("farmhash.dat", head=TRUE, sep=",")
 data.cityhash <- read.csv("cityhash.dat", head=TRUE, sep=",")
@@ -15,6 +16,7 @@ graph <- ggplot(legend = TRUE) +
   theme(plot.title = element_text(size = 10), 
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
         axis.text.x = element_text(size = 8), axis.text.y = element_text(size = 8)) + 
+  geom_line(data = data.standard, aes(x = size, y = rate, colour = "C++11 std::hash")) +
   geom_line(data = data.cfarmhash, aes(x = size, y = rate, colour = "cfarmhash")) +
   geom_line(data = data.farmhash, aes(x = size, y = rate, colour = "farmhash")) +
   geom_line(data = data.cityhash, aes(x = size, y = rate, colour = "cityhash")) +
@@ -23,5 +25,5 @@ graph <- ggplot(legend = TRUE) +
   scale_y_continuous(labels = comma) +
   scale_x_continuous(labels = comma) +
   scale_colour_manual("",
-                      values = c("#E69F00", "#56B4E9", "#D55E00", "#009E73", "#0072B2"))
+                      values = c("#000000", "#E69F00", "#56B4E9", "#D55E00", "#009E73", "#0072B2"))
 ggsave(graph, file = "hash-function-benchmark.pdf", width = 10, height = 5)

@@ -1,4 +1,4 @@
-HASH		= cfarmhash farmhash cityhash murmurhash3 spookyv2
+HASH		= standard cfarmhash farmhash cityhash murmurhash3 spookyv2
 DATA		= $(HASH:=.dat)
 CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11
 CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11
@@ -13,6 +13,9 @@ hash-function-benchmark.pdf: $(DATA)
 
 %.dat: %
 	(echo "\"size\",\"rate\""; ./$^ $(BEGIN) $(END) $(INC) | tr -d , | awk '{printf "%d,%d\n",$$2,$$6}') > $@
+
+standard: standard.cc
+	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
 cfarmhash: cfarmhash.c support/cfarmhash.c
 	$(CC) $(CFLAGS) -o $@ $^ -I support
