@@ -17,6 +17,10 @@ uint64_t ntime()
 
 int main(int argc, char **argv)
 {
+  if (argc != 4) {
+    printf("Missing parameters!\n");
+    return (-1);
+  }
   unsigned int begin = strtol(argv[1], NULL, 0);
   unsigned int end = strtol(argv[2], NULL, 0);
   unsigned int inc = strtol(argv[3], NULL, 0);

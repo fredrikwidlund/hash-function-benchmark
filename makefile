@@ -33,7 +33,21 @@ spookyv2: spookyv2.cc support/SpookyV2.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
 clhash: clhash.c support/clhash.c
-	$(CC) $(CFLAGS) -o $@ $^ -I support
+	# clhash wants very specific flags
+	$(CC) -std=c99 \
+		-fPIC \
+		-O3 \
+		-msse4.2 \
+		-mpclmul \
+		-march=native \
+		-funroll-loops \
+		-Wstrict-overflow \
+		-Wstrict-aliasing \
+		-Wall \
+		-Wextra \
+		-pedantic \
+		-Wshadow \
+		-o $@ $^ -I support
 
 clean:
 	rm -f $(HASH) $(DATA)
