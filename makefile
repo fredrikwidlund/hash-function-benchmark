@@ -1,7 +1,7 @@
 HASH		= standard cfarmhash farmhash cityhash murmurhash3 spookyv2 clhash
-DATA		= $(HASH:=.dat)
-CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11
-CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11
+DATA		= $(HASH:=.csv)
+CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
+CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
 BEGIN		= 1
 INC		= 1
 END		= 256
@@ -11,7 +11,7 @@ END		= 256
 hash-function-benchmark.pdf: $(DATA)
 	./graph.R
 
-%.dat: %
+%.csv: %
 	(echo "\"size\",\"rate\""; ./$^ $(BEGIN) $(END) $(INC) | tr -d , | awk '{printf "%d,%d\n",$$2,$$6}') > $@
 
 standard: standard.cc
@@ -34,18 +34,10 @@ spookyv2: spookyv2.cc support/SpookyV2.cpp
 
 clhash: clhash.c support/clhash.c
 	# clhash wants very specific flags
-	$(CC) -std=c99 \
-		-fPIC \
-		-O3 \
-		-msse4.2 \
-		-mpclmul \
-		-march=native \
-		-funroll-loops \
+	$(CC) $(CFLAGS) -std=c99 \
 		-Wstrict-overflow \
 		-Wstrict-aliasing \
-		-Wall \
 		-Wextra \
-		-pedantic \
 		-Wshadow \
 		-o $@ $^ -I support
 

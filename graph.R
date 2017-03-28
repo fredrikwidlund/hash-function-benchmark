@@ -4,13 +4,13 @@ library(ggplot2)
 library(scales)
 library(sitools)
 
-data.standard <- read.csv("standard.dat", head=TRUE, sep=",")
-data.cfarmhash <- read.csv("cfarmhash.dat", head=TRUE, sep=",")
-data.farmhash <- read.csv("farmhash.dat", head=TRUE, sep=",")
-data.cityhash <- read.csv("cityhash.dat", head=TRUE, sep=",")
-data.murmurhash3 <- read.csv("murmurhash3.dat", head=TRUE, sep=",")
-data.spookyv2 <- read.csv("spookyv2.dat", head=TRUE, sep=",")
-data.clhash <- read.csv("clhash.dat", head=TRUE, sep=",")
+data.standard <- read.csv("standard.csv", head=TRUE, sep=",")
+data.cfarmhash <- read.csv("cfarmhash.csv", head=TRUE, sep=",")
+data.farmhash <- read.csv("farmhash.csv", head=TRUE, sep=",")
+data.cityhash <- read.csv("cityhash.csv", head=TRUE, sep=",")
+data.murmurhash3 <- read.csv("murmurhash3.csv", head=TRUE, sep=",")
+data.spookyv2 <- read.csv("spookyv2.csv", head=TRUE, sep=",")
+data.clhash <- read.csv("clhash.csv", head=TRUE, sep=",")
 
 graph <- ggplot(legend = TRUE) + 
   ggtitle('Hash function benchmark') +
