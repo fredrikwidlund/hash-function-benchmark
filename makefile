@@ -40,6 +40,9 @@ clhash: clhash.c support/clhash.c
 		-Wextra \
 		-Wshadow \
 		-o $@ $^ -I support
+overall: support/cfarmhash.h support/cfarmhash.c support/MurmurHash3.cpp support/MurmurHash3.h support/clhash.h support/clhash.c overall.cc
+	$(CXX) -O3 -o overall overall.cc -march=native -Wall -Wextra
+	./overall
 
 clean:
 	rm -f $(HASH) $(DATA)
