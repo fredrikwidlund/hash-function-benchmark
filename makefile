@@ -1,4 +1,4 @@
-HASH		= crc32 crc64 standard cfarmhash farmhash cityhash murmurhash3 spookyv2 clhash
+HASH		= crc32 crc64 standard cfarmhash farmhash cityhash murmurhash3 spookyv2 xxhash clhash
 DATA		= $(HASH:=.csv)
 CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
 CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
@@ -38,6 +38,9 @@ murmurhash3: murmurhash3.cc support/MurmurHash3.cpp
 spookyv2: spookyv2.cc support/SpookyV2.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
+xxhash: xxhash.cc support/xxhash.c
+	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
+	
 clhash: clhash.c support/clhash.c
 	# clhash wants very specific flags
 	$(CC) $(CFLAGS) -std=c99 \
