@@ -5,7 +5,7 @@
 #include <err.h>
 #include <sys/time.h>
 
-#include <city.h>
+#include <xxh3.h>
 
 uint64_t ntime()
 {
@@ -24,21 +24,20 @@ int main(int argc, char **argv)
   float t;
   size_t len;
   char *in = (char *) malloc(end);
-
-  for (i = 0; i < end; i ++)
-    in[i] = rand() % 255 + 1;
   
-  for (len = (size_t)begin; len < end; len += inc)
+  for (i = 0; i < end; i ++)
+      in[i] = rand() % 255 + 1;
+  
+  for (len = begin; len < end; len += inc)
     {
       t1 = ntime();
       for (i = 0; i < n; i ++)
-        h ^= CityHash64(in, len);
+        h ^= XXH64(in, len, 999);
       t2 = ntime();
       if (h != 0)
         err(1, "invalid result");
-      
+
       t = (float) (t2 - t1) / 1000000000;
-      
       printf("size %ld, Mops %.0f, throughput %.0f MB/s\n", len, (float) n / t / 1000000, (float) (len * n) / t / 1000000);
     }
 

@@ -5,7 +5,7 @@
 #include <err.h>
 #include <sys/time.h>
 
-#include <city.h>
+#include <clhash.h>
 
 uint64_t ntime()
 {
@@ -17,6 +17,10 @@ uint64_t ntime()
 
 int main(int argc, char **argv)
 {
+  if (argc != 4) {
+    printf("Missing parameters!\n");
+    return (-1);
+  }
   unsigned int begin = strtol(argv[1], NULL, 0);
   unsigned int end = strtol(argv[2], NULL, 0);
   unsigned int inc = strtol(argv[3], NULL, 0);
@@ -24,15 +28,16 @@ int main(int argc, char **argv)
   float t;
   size_t len;
   char *in = (char *) malloc(end);
+  void * random =  get_random_key_for_clhash(UINT64_C(0x23a23cf5033c3c81),UINT64_C(0xb3816f6a2c68e530));
 
   for (i = 0; i < end; i ++)
     in[i] = rand() % 255 + 1;
   
-  for (len = (size_t)begin; len < end; len += inc)
+  for (len = begin; len < end; len += inc)
     {
       t1 = ntime();
       for (i = 0; i < n; i ++)
-        h ^= CityHash64(in, len);
+        h ^= clhash(random, in, len);
       t2 = ntime();
       if (h != 0)
         err(1, "invalid result");
@@ -43,4 +48,5 @@ int main(int argc, char **argv)
     }
 
   free(in);
+  free(random);
 }

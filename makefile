@@ -1,7 +1,7 @@
-HASH		= standard cfarmhash farmhash cityhash murmurhash3 spookyv2
-DATA		= $(HASH:=.dat)
-CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11
-CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11
+HASH		= crc32 crc64 standard cfarmhash farmhash cityhash murmurhash3 spookyv2 xxhash clhash
+DATA		= $(HASH:=.csv)
+CFLAGS  	= -Wall -Werror -Wpedantic -O3 -flto -std=c11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
+CXXFLAGS	= -Wall -Werror -Wpedantic -O3 -flto -std=c++11 -fPIC -msse4.2 -mpclmul -march=native -funroll-loops
 BEGIN		= 1
 INC		= 1
 END		= 256
@@ -11,9 +11,15 @@ END		= 256
 hash-function-benchmark.pdf: $(DATA)
 	./graph.R
 
-%.dat: %
+%.csv: %
 	(echo "\"size\",\"rate\""; ./$^ $(BEGIN) $(END) $(INC) | tr -d , | awk '{printf "%d,%d\n",$$2,$$6}') > $@
 
+crc32: crc32.cc support/crc32.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
+	
+crc64: crc64.cc
+	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
+	
 standard: standard.cc
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
 
@@ -31,6 +37,21 @@ murmurhash3: murmurhash3.cc support/MurmurHash3.cpp
 
 spookyv2: spookyv2.cc support/SpookyV2.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
+
+xxhash: xxhash.cc support/xxhash.c
+	$(CXX) $(CXXFLAGS) -o $@ $^ -I support
+	
+clhash: clhash.c support/clhash.c
+	# clhash wants very specific flags
+	$(CC) $(CFLAGS) -std=c99 \
+		-Wstrict-overflow \
+		-Wstrict-aliasing \
+		-Wextra \
+		-Wshadow \
+		-o $@ $^ -I support
+overall: support/cfarmhash.h support/cfarmhash.c support/MurmurHash3.cpp support/MurmurHash3.h support/clhash.h support/clhash.c support/crc32.cpp overall.cc
+	$(CXX) -O3 -o overall overall.cc -march=native -Wall -Wextra
+	./overall
 
 clean:
 	rm -f $(HASH) $(DATA)
